@@ -25,8 +25,10 @@ app.use('/public', express.static(path.join(__dirname, 'public')));
 // 路由前加全局调试中间件
 app.use((req, res, next) => {
     console.log(`[DEBUG] 收到请求: ${req.method} ${req.originalUrl}`);
+    console.log(`[DEBUG] Headers:`, req.headers);
     next();
 });
+
 
 // 路由
 app.use('/', routes);

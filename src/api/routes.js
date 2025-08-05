@@ -129,6 +129,11 @@ router.get('/api/callback/:code', async (req, res) => {
     const { code } = req.params;
     const { msg_signature, timestamp, nonce, echostr } = req.query;
 
+    console.log(`[DEBUG] 回调消息接收: code=${code}`);
+    console.log(`[DEBUG] Query参数:`, req.query);
+    console.log(`[DEBUG] 原始Body:`, req.body?.toString('utf8'));
+
+
     if (!msg_signature || !timestamp || !nonce || !echostr) {
         return res.status(400).json({ error: '缺少必要的验证参数' });
     }

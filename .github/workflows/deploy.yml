@@ -19,7 +19,7 @@ jobs:
           username: ubuntu
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd /home/ubuntu/wechat-notifier
+            cd /home/ubuntu/qywx-push-myversion
             git pull origin main
             docker-compose down
             docker-compose up -d --build

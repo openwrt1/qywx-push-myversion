@@ -4,8 +4,8 @@
   "description": "企业微信通知转发服务 - 类似Server酱的轻量级通知服务",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node --inspect=0.0.0.0:9229 server.js",
+    "dev": "nodemon --inspect=0.0.0.0:9229 server.js"
   },
   "keywords": [
     "wechat",

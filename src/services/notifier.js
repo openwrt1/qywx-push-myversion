@@ -193,33 +193,62 @@ async function createConfiguration(config) {
  * @returns {Promise<Object>} - 企业微信API返回结果
  */
 async function sendNotification(code, title, content) {
+    console.log('[DEBUG] 开始发送通知，code:', code);
+
     // 查询配置
     const config = await db.getConfigurationByCode(code);
     if (!config) {
+        console.error('[ERROR] 无效的code，未找到配置');
         throw new Error('无效的code，未找到配置');
     }
+
+    console.log('[DEBUG] 获取到配置:', config);
+
     // 解密corpsecret
-    const corpsecret = crypto.decrypt(config.encrypted_corpsecret);
+    let corpsecret;
+    try {
+        corpsecret = crypto.decrypt(config.encrypted_corpsecret);
+        console.log('[DEBUG] 解密后的corpsecret:', corpsecret);
+    } catch (err) {
+        console.error('[ERROR] corpsecret解密失败:', err.message);
+        throw err;
+    }
+
     // 获取access_token
-    const accessToken = await wechat.getToken(config.corpid, corpsecret);
-    
-        // 打印关键参数
+    let accessToken;
+    try {
+        accessToken = await wechat.getToken(config.corpid, corpsecret);
+        console.log('[DEBUG] 获取accessToken成功:', accessToken);
+    } catch (err) {
+        console.error('[ERROR] 获取accessToken失败:', err.message);
+        throw err;
+    }
+
+    // 打印关键参数
     console.log('[DEBUG] corpid:', config.corpid);
     console.log('[DEBUG] agentid:', config.agentid);
     console.log('[DEBUG] touser:', config.touser);
-    console.log('[DEBUG] accessToken:', accessToken);
-    
+
     // 组装消息内容
     const message = title ? `${title}\n${content}` : content;
+    console.log('[DEBUG] 发送消息内容:', message);
+
     // 发送消息
-    const result = await wechat.sendMessage(
-        accessToken,
-        config.agentid,
-        config.touser,
-        message
-    );
-    return result;
+    try {
+        const result = await wechat.sendMessage(
+            accessToken,
+            config.agentid,
+            config.touser,
+            message
+        );
+        console.log('[DEBUG] 消息发送结果:', result);
+        return result;
+    } catch (err) {
+        console.error('[ERROR] 消息发送失败:', err.message);
+        throw err;
+    }
 }
+
 
 /**
  * 获取配置（不返回敏感信息）

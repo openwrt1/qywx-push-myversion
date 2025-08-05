@@ -202,6 +202,13 @@ async function sendNotification(code, title, content) {
     const corpsecret = crypto.decrypt(config.encrypted_corpsecret);
     // 获取access_token
     const accessToken = await wechat.getToken(config.corpid, corpsecret);
+    
+        // 打印关键参数
+    console.log('[DEBUG] corpid:', config.corpid);
+    console.log('[DEBUG] agentid:', config.agentid);
+    console.log('[DEBUG] touser:', config.touser);
+    console.log('[DEBUG] accessToken:', accessToken);
+    
     // 组装消息内容
     const message = title ? `${title}\n${content}` : content;
     // 发送消息

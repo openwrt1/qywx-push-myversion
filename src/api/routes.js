@@ -82,7 +82,9 @@ router.post('/api/configure', async (req, res) => {
 router.post('/api/notify/:code', async (req, res) => {
     const { code } = req.params;
     const { title, content } = req.body;
+    console.log('[DEBUG] 2222');
     if (!content) {
+        console.log('[DEBUG] 3333');
         return res.status(400).json({ error: '消息内容不能为空' });
     }
     try {

@@ -22,6 +22,12 @@ app.use(bodyParser());
 // 静态资源服务
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
+// 路由前加全局调试中间件
+app.use((req, res, next) => {
+    console.log(`[DEBUG] 收到请求: ${req.method} ${req.originalUrl}`);
+    next();
+});
+
 // 路由
 app.use('/', routes);
 

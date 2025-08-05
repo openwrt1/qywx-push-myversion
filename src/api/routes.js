@@ -99,6 +99,7 @@ router.post('/api/notify/:code', async (req, res) => {
     }
 });
 
+
 // 5. GET /api/configuration/:code 获取配置信息
 router.get('/api/configuration/:code', async (req, res) => {
     const { code } = req.params;

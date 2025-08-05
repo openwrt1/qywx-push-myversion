@@ -19,7 +19,9 @@ jobs:
           username: ubuntu
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
+            git config --global --add safe.directory /home/ubuntu/qywx-push-myversion
             cd /home/ubuntu/qywx-push-myversion
             git pull origin main
             docker-compose down
             docker-compose up -d --build
+

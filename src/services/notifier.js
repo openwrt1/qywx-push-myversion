@@ -2,7 +2,7 @@
 // 处理配置创建和消息发送的业务逻辑
 
 const { v4: uuidv4 } = require('uuid');
-const Database = require('../core/database');
+const Database = require('../core/Database');
 const CryptoService = require('../core/crypto');
 const WeChatService = require('../core/wechat');
 const WeChatCallbackCrypto = require('../core/wechat-callback');
@@ -385,6 +385,13 @@ async function handleCallbackMessage(code, encryptedData, msgSignature, timestam
         return { success: false, error: error.message };
     }
 }
+
+async function deleteConfiguration(code) {
+    return await db.deleteConfigurationByCode(code);
+}
+
+
+
 
 module.exports = {
     createCallbackConfiguration,

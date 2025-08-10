@@ -15,22 +15,39 @@ class WeChatService {
             // 检查缓存
             const cacheKey = `${corpid}_${corpsecret}`;
             const cached = this.tokenCache.get(cacheKey);
-            
+
             if (cached && cached.expires > Date.now()) {
                 console.log('使用缓存的access_token');
                 return cached.token;
             }
 
             // 调用企业微信API获取token
+            console.log('准备请求 gettoken 接口');
+            console.log('请求 URL:', `${this.apiBase}/cgi-bin/gettoken`);
+            console.log('请求参数:', { corpid, corpsecret });
+            console.log('请求完整URL:', `${this.apiBase}/cgi-bin/gettoken`);
+            console.log('是否HTTPS:', this.apiBase.startsWith('https://'));
+
             const response = await axios.get(`${this.apiBase}/cgi-bin/gettoken`, {
                 params: {
                     corpid: corpid,
                     corpsecret: corpsecret
-                }
+                },
+                headers: {
+                    'User-Agent': 'Node.js Axios Client',
+                    'Accept': 'application/json'
+                },
+                timeout: 5000
             });
 
+            console.log('响应状态码:', response.status);
+            console.log('响应数据:', response.data);
+
+
+
+
             const { data } = response;
-            
+
             if (data.errcode !== 0) {
                 throw new Error(`获取token失败: ${data.errmsg} (错误码: ${data.errcode})`);
             }
@@ -45,9 +62,14 @@ class WeChatService {
             console.log('获取access_token成功');
             return data.access_token;
         } catch (error) {
-            console.error('获取access_token失败:', error.message);
+            if (error.response) {
+                console.error('响应错误:', error.response.data);
+            } else {
+                console.error('请求失败:', error.message);
+            }
             throw error;
         }
+
     }
 
     // 发送应用消息
@@ -70,7 +92,7 @@ class WeChatService {
             );
 
             const { data } = response;
-            
+
             if (data.errcode !== 0) {
                 throw new Error(`发送消息失败: ${data.errmsg} (错误码: ${data.errcode})`);
             }
@@ -93,7 +115,7 @@ class WeChatService {
             });
 
             const { data } = response;
-            
+
             if (data.errcode !== 0) {
                 throw new Error(`获取部门列表失败: ${data.errmsg} (错误码: ${data.errcode})`);
             }
@@ -116,7 +138,7 @@ class WeChatService {
             });
 
             const { data } = response;
-            
+
             if (data.errcode !== 0) {
                 throw new Error(`获取成员列表失败: ${data.errmsg} (错误码: ${data.errcode})`);
             }

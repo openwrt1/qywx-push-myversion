@@ -183,4 +183,16 @@ router.post('/api/callback/:code', async (req, res) => {
     }
 });
 
+router.delete('/api/configuration/:code', async (req, res) => {
+    const { code } = req.params;
+    try {
+        const result = await notifier.deleteConfiguration(code);
+        res.json({ message: '配置已删除', code: result.code });
+    } catch (err) {
+        res.status(500).json({ error: err.message || '删除配置失败' });
+    }
+});
+
+
+
 module.exports = router;

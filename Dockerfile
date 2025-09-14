@@ -1,21 +1,33 @@
-FROM node:18
+# FROM node:18
+
+# WORKDIR /app
+
+# # 复制 package 文件
+# COPY package*.json ./
+
+# # 设置npm配置以提高稳定性
+# RUN npm config set registry https://registry.npmmirror.com \
+#     && npm config set fetch-retry-mintimeout 20000 \
+#     && npm config set fetch-retry-maxtimeout 120000
+
+# # 安装依赖 (使用--build-from-source确保sqlite3正确编译)
+# RUN npm install --build-from-source=sqlite3
+
+# # 复制应用代码
+# COPY . .
+
+# EXPOSE 12121
+
+# CMD ["npm", "start"]
+FROM node:20
 
 WORKDIR /app
-
-# 复制 package 文件
 COPY package*.json ./
 
-# 设置npm配置以提高稳定性
+# 更快更稳：跳过 dev 依赖，使用官方预编译 sqlite3
 RUN npm config set registry https://registry.npmmirror.com \
-    && npm config set fetch-retry-mintimeout 20000 \
-    && npm config set fetch-retry-maxtimeout 120000
+    && npm ci --omit=dev
 
-# 安装依赖 (使用--build-from-source确保sqlite3正确编译)
-RUN npm install --build-from-source=sqlite3
-
-# 复制应用代码
 COPY . .
-
 EXPOSE 12121
-
 CMD ["npm", "start"]

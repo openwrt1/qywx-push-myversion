@@ -11,6 +11,10 @@ const routes = require('./src/api/routes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// server.js 顶部路由前加
+app.get('/health', (req, res) => res.status(200).send('ok'));
+
+
 // 为回调接口使用原始文本解析器
 app.use('/api/callback', express.raw({ type: 'text/xml' }));
 app.use('/api/callback', express.raw({ type: 'application/xml' }));

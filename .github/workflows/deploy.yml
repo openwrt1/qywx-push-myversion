@@ -41,6 +41,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ubuntu
           password: ${{ secrets.VPS_PASSWORD }}
+          port: 22 # 比如 2222，如果是22则不需要加这一行
           script: |
             # 让 VPS 登录到 GitHub 镜像仓库，以便能拉取刚刚构建好的镜像
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

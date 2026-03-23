@@ -47,12 +47,21 @@ jobs:
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
             cd /root
-            # 如果没有代码仓库，就自动 clone 一份
-            if [ ! -d "qywx-push-myversion/.git" ]; then
-              git clone https://github.com/${{ github.repository }}.git qywx-push-myversion
+            # 如果存在同名文件夹但不是git代码库，则先强行删除（解决之前手动创建空文件夹导致的问题）
+            if [ -d "qywx-push-myversion" ] && [ ! -d "qywx-push-myversion/.git" ]; then
+              rm -rf qywx-push-myversion
+            fi
+            
+            # 如果连文件夹都没有，直接全新克隆（使用你的绝对地址）
+            if [ ! -d "qywx-push-myversion" ]; then
+              git clone https://github.com/openwrt1/qywx-push-myversion.git
             fi
             cd qywx-push-myversion
             git config --global --add safe.directory /root/qywx-push-myversion
+            
+            # 强制丢弃本地所有可能冲突的改动，拉取 GitHub 最新的代码
+            git fetch --all
+            git reset --hard origin/main
             git pull
             
             # 将构建好的镜像名称写入 .env 文件，供 docker-compose 读取

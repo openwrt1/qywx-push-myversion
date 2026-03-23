@@ -2,7 +2,7 @@ version: '3'
 
 services:
   wechat-notifier:
-    build: .
+    image: ${IMAGE_NAME}
     container_name: wechat-notifier
     restart: unless-stopped
     ports:
@@ -16,4 +16,3 @@ services:
       - DB_PATH=/app/database/notifier.db
       - ENCRYPTION_KEY=change-this-to-a-random-32-character-string
       - WECHAT_API_BASE=https://qyapi.weixin.qq.com
-    command: npm run dev

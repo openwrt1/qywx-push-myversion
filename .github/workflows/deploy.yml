@@ -46,9 +46,14 @@ jobs:
             # 让 VPS 登录到 GitHub 镜像仓库，以便能拉取刚刚构建好的镜像
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
-            git config --global --add safe.directory /home/ubuntu/qywx-push-myversion
-            cd /root/qywx-push-myversion
-            git pull origin main
+            cd /root
+            # 如果没有代码仓库，就自动 clone 一份
+            if [ ! -d "qywx-push-myversion/.git" ]; then
+              git clone https://github.com/${{ github.repository }}.git qywx-push-myversion
+            fi
+            cd qywx-push-myversion
+            git config --global --add safe.directory /root/qywx-push-myversion
+            git pull
             
             # 将构建好的镜像名称写入 .env 文件，供 docker-compose 读取
             echo "IMAGE_NAME=${{ steps.repo-name.outputs.image }}" > .env

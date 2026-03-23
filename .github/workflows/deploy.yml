@@ -39,7 +39,7 @@ jobs:
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: ubuntu
+          username: root
           password: ${{ secrets.VPS_PASSWORD }}
           port: 22 # 比如 2222，如果是22则不需要加这一行
           script: |
@@ -47,7 +47,7 @@ jobs:
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
             
             git config --global --add safe.directory /home/ubuntu/qywx-push-myversion
-            cd /home/ubuntu/qywx-push-myversion
+            cd /root/qywx-push-myversion
             git pull origin main
             
             # 将构建好的镜像名称写入 .env 文件，供 docker-compose 读取

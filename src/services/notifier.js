@@ -2,7 +2,7 @@
 // 处理配置创建和消息发送的业务逻辑
 
 const { v4: uuidv4 } = require('uuid');
-const Database = require('../core/Database');
+const Database = require('../core/database');
 const CryptoService = require('../core/crypto');
 const WeChatService = require('../core/wechat');
 const WeChatCallbackCrypto = require('../core/wechat-callback');

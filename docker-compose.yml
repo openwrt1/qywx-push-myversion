@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   wechat-notifier:
     image: ${IMAGE_NAME}
